@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:baselineAligned="false">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <FrameLayout
+            android:id="@+id/main_camera_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <abdullahhafeez.me.prototype2.CameraSourcePreview
+                android:id="@+id/preview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <abdullahhafeez.me.prototype2.GraphicOverlay
+                    android:id="@+id/faceOverlay"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </abdullahhafeez.me.prototype2.CameraSourcePreview>
+
+        </FrameLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true">
+
+           <!-- <Button
+                android:id="@+id/flash_but"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/flash_off_icon"
+                android:layout_alignParentLeft="true"
+                android:onClick="flashOnClick"
+                android:tag="flash_off"
+                android:layout_marginLeft="20dp"/> -->
+
+            <Button
+                android:id="@+id/logo_but"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/logo"
+                android:layout_centerHorizontal="true"
+                android:onClick="logoOnClick"/>
+
+          <!--  <Button
+                android:id="@+id/camera_switch_but"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/switch_camera_icon"
+                android:layout_alignParentRight="true"
+                android:onClick="cameraSwitchOnClick"
+                android:layout_marginRight="20dp"/> -->
+
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_alignParentBottom="true">
+
+            <Button
+                android:id="@+id/video_chat_but"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/video_chat_icon"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:onClick="videoChatOnClick"
+                android:layout_marginLeft="20dp"/>
+
+            <Button
+                android:id="@+id/camera_capture_but"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/camera_icon"
+                android:onClick="cameraCaptureOnClick"/>
+
+            <Button
+                android:id="@+id/store_but"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/store_icon"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:onClick="storeOnClick"
+                android:layout_marginRight="20dp"/>
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</LinearLayout>
