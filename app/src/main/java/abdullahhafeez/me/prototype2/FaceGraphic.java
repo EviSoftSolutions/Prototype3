@@ -15,21 +15,29 @@
  */
 package abdullahhafeez.me.prototype2;
 
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.hardware.display.DisplayManager;
+import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import abdullahhafeez.me.prototype2.GraphicOverlay;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.Landmark;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.List;
 
 /**
@@ -42,6 +50,7 @@ class FaceGraphic extends GraphicOverlay.Graphic {
     private static final float ID_Y_OFFSET = 50.0f;
     private static final float ID_X_OFFSET = -50.0f;
     private static final float BOX_STROKE_WIDTH = 5.0f;
+   private boolean save = true;
 
     private static final int COLOR_CHOICES[] = {
         Color.BLUE,
@@ -61,13 +70,14 @@ class FaceGraphic extends GraphicOverlay.Graphic {
     private volatile Face mFace;
     private int mFaceId;
     private float mFaceHappiness;
+    private GraphicOverlay overlay;
 
     FaceGraphic(GraphicOverlay overlay) {
         super(overlay);
 
         mCurrentColorIndex = (mCurrentColorIndex + 1) % COLOR_CHOICES.length;
         final int selectedColor = COLOR_CHOICES[mCurrentColorIndex];
-
+        this.overlay =overlay;
         mFacePositionPaint = new Paint();
         mFacePositionPaint.setColor(selectedColor);
 
@@ -198,7 +208,48 @@ class FaceGraphic extends GraphicOverlay.Graphic {
         }
         //canvas.drawCircle(left, top, FACE_POSITION_RADIUS,mFacePositionPaint);
         //canvas.drawCircle(xOffset, yOffset, FACE_POSITION_RADIUS, mFacePositionPaint);
-
+        Bitmap bitmap = BitmapFactory.decodeResource(overlay.getContext().getResources(), R.drawable.download);
+        canvas.drawBitmap(bitmap, left,top,new Paint());
         canvas.drawRect(left, top, right, bottom, mBoxPaint);
+        Bitmap bmOverlay = Bitmap.createBitmap(canvas.getWidth()/2, canvas.getHeight()/2, Bitmap.Config.RGB_565);
+//        Bitmap bmOverlay = Bitmap.createBitmap(getDrawingCache());
+       canvas = new Canvas(bmOverlay);
+        //canvas.drawBitmap(bmOverlay, 0,0,new Paint());
+
+         if(save)
+         {
+             String root = Environment.getExternalStorageDirectory().toString();
+             File myDir = new File(root + "/dress");
+             myDir.mkdirs();
+
+             if (myDir.exists())
+                 Toast.makeText(overlay.getContext(), "Directory Exist", Toast.LENGTH_SHORT).show();
+
+             String fname = "save.png";
+             File file = new File (myDir, fname);
+             Log.e("File path", file.getAbsolutePath());
+
+//             ContextWrapper cw = new ContextWrapper(overlay.getContext());
+//             // path to /data/data/yourapp/app_data/imageDir
+//             File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+//             // Create imageDir
+//             File file=new File(directory,"profile.jpg");
+
+
+             if (file.exists ()) file.delete ();
+             try {
+                 FileOutputStream out = new FileOutputStream(file);
+                 bmOverlay.compress(Bitmap.CompressFormat.PNG, 100, out);
+                 Log.e("Writing bitmap", file.getAbsolutePath());
+                 Toast.makeText(overlay.getContext(), "file written", Toast.LENGTH_SHORT).show();
+                 out.flush();
+                 out.close();
+             } catch (Exception e) {
+                 e.printStackTrace();
+             }
+             save = false;
+         }
+
+
     }
 }
