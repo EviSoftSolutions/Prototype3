@@ -1,11 +1,14 @@
 package abdullahhafeez.me.prototype2;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.provider.MediaStore.Video.Thumbnails;
 
 /**
  * Created by Abdullah on 6/19/2017.
@@ -46,6 +49,10 @@ public class VideosAdapter extends BaseAdapter {
         {
             imageView = (ImageView) convertView;
         }
+//        Bitmap bmThumbnail;
+//        bmThumbnail = ThumbnailUtils.createVideoThumbnail(videoFileList[position], Thumbnails.MICRO_KIND);
+//        imageView.setImageBitmap(bmThumbnail);
+
         imageView.setImageResource(mThumbIds[position]);
         return imageView;
     }

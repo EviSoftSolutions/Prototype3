@@ -74,7 +74,7 @@ public class GraphicOverlay extends View {
          *
          * @param canvas drawing canvas
          */
-        public abstract void draw(Canvas canvas);
+        public abstract void draw(Canvas canvas, View view);
 
         /**
          * Adjusts a horizontal value of the supplied value from the preview scale to the view
@@ -87,7 +87,7 @@ public class GraphicOverlay extends View {
         /**
          * Adjusts a vertical value of the supplied value from the preview scale to the view scale.
          */
-        public float scaleY(float vertical) {
+        public float scaleY(float vertical){
             return vertical * mOverlay.mHeightScaleFactor;
         }
 
@@ -175,9 +175,8 @@ public class GraphicOverlay extends View {
                 mWidthScaleFactor = (float) canvas.getWidth() / (float) mPreviewWidth;
                 mHeightScaleFactor = (float) canvas.getHeight() / (float) mPreviewHeight;
             }
-
             for (Graphic graphic : mGraphics) {
-                graphic.draw(canvas);
+                graphic.draw(canvas,GraphicOverlay.this);
             }
         }
     }

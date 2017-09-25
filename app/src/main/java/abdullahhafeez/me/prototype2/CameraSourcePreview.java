@@ -18,13 +18,16 @@ package abdullahhafeez.me.prototype2;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import com.google.android.gms.common.images.Size;
-import com.google.android.gms.vision.CameraSource;
+//import com.google.android.gms.vision.CameraSource;
 
 import java.io.IOException;
 
@@ -32,10 +35,10 @@ public class CameraSourcePreview extends ViewGroup {
     private static final String TAG = "CameraSourcePreview";
 
     private Context mContext;
-    private SurfaceView mSurfaceView;
+    public SurfaceView mSurfaceView;
     private boolean mStartRequested;
     private boolean mSurfaceAvailable;
-    private CameraSource mCameraSource;
+    public CameraSource mCameraSource;
 
     private GraphicOverlay mOverlay;
 
@@ -83,6 +86,7 @@ public class CameraSourcePreview extends ViewGroup {
 
     private void startIfReady() throws IOException {
         if (mStartRequested && mSurfaceAvailable) {
+
             mCameraSource.start(mSurfaceView.getHolder());
             if (mOverlay != null) {
                 Size size = mCameraSource.getPreviewSize();
@@ -105,6 +109,7 @@ public class CameraSourcePreview extends ViewGroup {
         @Override
         public void surfaceCreated(SurfaceHolder surface) {
             mSurfaceAvailable = true;
+
             try {
                 startIfReady();
             } catch (IOException e) {
@@ -124,83 +129,19 @@ public class CameraSourcePreview extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-
-        int previewWidth = 320;
-        int previewHeight = 240;
+        int width = 320;
+        int height = 240;
         if (mCameraSource != null) {
             Size size = mCameraSource.getPreviewSize();
             if (size != null) {
-                previewWidth = size.getWidth();
-                previewHeight = size.getHeight();
+                width = size.getWidth();
+                height = size.getHeight();
             }
         }
 
         // Swap width and height sizes when in portrait, since it will be rotated 90 degrees
         if (isPortraitMode()) {
-            int tmp = previewWidth;
-            previewWidth = previewHeight;
-            previewHeight = tmp;
-        }
-
-        final int viewWidth = right - left;
-        final int viewHeight = bottom - top;
-
-        int childWidth;
-        int childHeight;
-        int childXOffset = 0;
-        int childYOffset = 0;
-        float widthRatio = (float) viewWidth / (float) previewWidth;
-        float heightRatio = (float) viewHeight / (float) previewHeight;
-
-        // To fill the view with the camera preview, while also preserving the correct aspect ratio,
-        // it is usually necessary to slightly oversize the child and to crop off portions along one
-        // of the dimensions.  We scale up based on the dimension requiring the most correction, and
-        // compute a crop offset for the other dimension.
-        if (widthRatio > heightRatio) {
-            childWidth = viewWidth;
-            childHeight = (int) ((float) previewHeight * widthRatio);
-            childYOffset = (childHeight - viewHeight) / 2;
-        } else {
-            childWidth = (int) ((float) previewWidth * heightRatio);
-            childHeight = viewHeight;
-            childXOffset = (childWidth - viewWidth) / 2;
-        }
-
-        for (int i = 0; i < getChildCount(); ++i) {
-            // One dimension will be cropped.  We shift child over or up by this offset and adjust
-            // the size to maintain the proper aspect ratio.
-            getChildAt(i).layout(
-                    -1 * childXOffset, -1 * childYOffset,
-                    childWidth - childXOffset, childHeight - childYOffset);
-        }
-
-        try {
-            startIfReady();
-        } catch (IOException e) {
-            Log.e(TAG, "Could not start camera source.", e);
-        }
-
-
-
-/*
-        int width = 720;
-        int height = 1280;
-        if (mCameraSource != null)
-        {
-            Size size = mCameraSource.getPreviewSize();
-            if (size != null)
-            {
-                width = 720;//size.getWidth();
-                height = 1280;//size.getHeight();
-            }
-        }
-
-        // Swap width and height sizes when in portrait, since it will be rotated 90 degrees
-        if (isPortraitMode())
-        {
             int tmp = width;
-
-            //noinspection SuspiciousNameCombination
             width = height;
             height = tmp;
         }
@@ -210,26 +151,23 @@ public class CameraSourcePreview extends ViewGroup {
 
         // Computes height and width for potentially doing fit width.
         int childWidth = layoutWidth;
-        int childHeight = (int) (((float) layoutWidth / (float) width) * height);
+        int childHeight = (int)(((float) layoutWidth / (float) width) * height);
 
-        for (int i = 0; i < getChildCount(); ++i)
-        {
-            getChildAt(i).layout(0, 0, childWidth, layoutHeight);
+        // If height is too tall using fit width, does fit height instead.
+        if (childHeight > layoutHeight) {
+            childHeight = layoutHeight;
+            childWidth = (int)(((float) layoutHeight / (float) height) * width);
         }
 
-        try
-        {
+        for (int i = 0; i < getChildCount(); ++i) {
+            getChildAt(i).layout(0, 0, childWidth, childHeight);
+        }
+
+        try {
             startIfReady();
-        }
-        catch (SecurityException se)
-        {
-            Log.e(TAG, "Do not have permission to start the camera", se);
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             Log.e(TAG, "Could not start camera source.", e);
         }
-        */
     }
 
     private boolean isPortraitMode() {

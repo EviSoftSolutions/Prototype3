@@ -21,14 +21,17 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.hardware.display.DisplayManager;
 import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -50,7 +53,12 @@ class FaceGraphic extends GraphicOverlay.Graphic {
     private static final float ID_Y_OFFSET = 50.0f;
     private static final float ID_X_OFFSET = -50.0f;
     private static final float BOX_STROKE_WIDTH = 5.0f;
-   private boolean save = true;
+    private boolean save = true;
+    private static final String TAG = "FaceGraphic";
+
+    float faceLeft = -1;
+    float faceTop = -1;
+
 
     private static final int COLOR_CHOICES[] = {
         Color.BLUE,
@@ -66,15 +74,40 @@ class FaceGraphic extends GraphicOverlay.Graphic {
     private Paint mFacePositionPaint;
     private Paint mIdPaint;
     private Paint mBoxPaint;
-
+    private Matrix matrix;
+    private Matrix matrix1;
+    private Matrix matrix2;
     private volatile Face mFace;
     private int mFaceId;
-    private float mFaceHappiness;
     private GraphicOverlay overlay;
+    double imageWidth = 480;
+    double imageHeight = 640;
+    PointF point;
+    float x;
+    float y;
+
+    PointF leftEye = null;
+    PointF rightEye = null;
+    PointF noseBase = null;
+    PointF leftMouth = null;
+    PointF rightMouth =null;
+
+    PointF Fpoints;
+    List<Landmark> allLands;
+    float xOffset;
+    float yOffset;
+    float left;
+    float top;
+    float right;
+    float bottom;
+    double viewWidth;
+    double viewHeight;
+    Bitmap bitmap;
+    double degree;
 
     FaceGraphic(GraphicOverlay overlay) {
         super(overlay);
-
+        matrix =new Matrix();
         mCurrentColorIndex = (mCurrentColorIndex + 1) % COLOR_CHOICES.length;
         final int selectedColor = COLOR_CHOICES[mCurrentColorIndex];
         this.overlay =overlay;
@@ -89,12 +122,12 @@ class FaceGraphic extends GraphicOverlay.Graphic {
         mBoxPaint.setColor(selectedColor);
         mBoxPaint.setStyle(Paint.Style.STROKE);
         mBoxPaint.setStrokeWidth(BOX_STROKE_WIDTH);
+        bitmap = BitmapFactory.decodeResource(overlay.getContext().getResources(), R.drawable.moustache);
     }
 
     void setId(int id) {
         mFaceId = id;
     }
-
 
     /**
      * Updates the face instance from the detection of the most recent frame.  Invalidates the
@@ -109,146 +142,63 @@ class FaceGraphic extends GraphicOverlay.Graphic {
      * Draws the face annotations for position on the supplied canvas.
      */
     @Override
-    public void draw(Canvas canvas) {
+    public void draw(Canvas canvas, View view) {
         Face face = mFace;
         if (face == null) {
             return;
         }
-
         // Draws a circle at the position of the detected face, with the face's track id below.
-        float x = translateX(face.getPosition().x + face.getWidth() / 2);
-        float y = translateY(face.getPosition().y + face.getHeight() / 2);
-
-        List<Landmark> allLands = face.getLandmarks();
-
-      PointF Fpoints = face.getPosition();
-      //  for(Landmark a : allLands) {
-            //canvas.drawCircle(x, y, FACE_POSITION_RADIUS, mFacePositionPaint);
-          //  PointF point = a.getPosition();
-          //  Log.d("POINT", point.toString());
-//            Log.d("FACE POINT", Fpoints.toString());
-            //canvas.drawCircle(Fpoints.x, Fpoints.y, FACE_POSITION_RADIUS, mFacePositionPaint);
-            //canvas.drawCircle(Fpoints.x + point.x , Fpoints.y + point.y, FACE_POSITION_RADIUS, mFacePositionPaint);
-     //   }
-
-        //canvas.drawText("id: " + mFaceId, x + ID_X_OFFSET, y + ID_Y_OFFSET, mIdPaint);
-        //canvas.drawText("happiness: " + String.format("%.2f", face.getIsSmilingProbability()), x - ID_X_OFFSET, y - ID_Y_OFFSET, mIdPaint);
-        //canvas.drawText("right eye: " + String.format("%.2f", face.getIsRightEyeOpenProbability()), x + ID_X_OFFSET * 2, y + ID_Y_OFFSET * 2, mIdPaint);
-        //canvas.drawText("left eye: " + String.format("%.2f", face.getIsLeftEyeOpenProbability()), x - ID_X_OFFSET*2, y - ID_Y_OFFSET*2, mIdPaint);
-
-
-
+         x = translateX(face.getPosition().x + face.getWidth() / 2);
+         y = translateY(face.getPosition().y + face.getHeight() / 2);
+         allLands = face.getLandmarks();
+         Fpoints = face.getPosition();
         // Draws a bounding box around the face.
-        float xOffset = scaleX(face.getWidth() / 2.0f);
-        float yOffset = scaleY(face.getHeight() / 2.0f);
-        float left = x - xOffset;
-        float top = y - yOffset;
-        float right = x + xOffset;
-        float bottom = y + yOffset;
+         xOffset = scaleX(face.getWidth() / 2.5f);
+         yOffset = scaleY(face.getHeight() / 2.5f);
+         left = x - xOffset;
+         top = y - yOffset;
+         right = x + xOffset;
+         bottom = y + yOffset;
+         viewWidth = canvas.getWidth();
+         viewHeight = canvas.getHeight();
+        //double scale = Math.min(viewWidth / imageWidth, viewHeight / imageHeight);
         for(Landmark a : allLands) {
-            //canvas.drawCircle(x, y, FACE_POSITION_RADIUS, mFacePositionPaint);
-            PointF point = a.getPosition();
-            //Log.d("POINT", point.toString());
-            //Log.d("FACE POINT", Fpoints.toString());
+             point = a.getPosition();
 
-            switch (a.getType()) {
-                case 0:
-                    Log.d("BOTTOM_MOUTH", point.toString());
-                    break;
-                case 1:
-                    Log.d("LEFT_CHEEK", point.toString());
-                    break;
-                case 2:
-                    Log.d("LEFT_EAR_TIP", point.toString());
-                    break;
-                case 3:
-                    Log.d("LEFT_EAR", point.toString());
-                    break;
-                case 4:
-                    Log.d("LEFT_EYE", point.toString());
-                    break;
-                case 5:
-                    Log.d("LEFT_MOUTH", point.toString());
-                    break;
-                case 6:
-                    Log.d("NOSE_BASE", point.toString());
-                    break;
-                case 7:
-                    Log.d("RIGHT_CHEEK", point.toString());
-                    break;
-                case 8:
-                    Log.d("RIGHT_EAR_TIP", point.toString());
-                    break;
-                case 9:
-                    Log.d("RIGHT_EAR", point.toString());
-                    break;
-                case 10:
-                    Log.d("RIGHT_EYE", point.toString());
-                    break;
-                case 11:
-                    Log.d("RIGHT_MOUTH", point.toString());
-                    break;
+            if (a.getType() == Landmark.LEFT_MOUTH){
+                    leftMouth = a.getPosition();
+            }
+            else if (a.getType() ==Landmark.NOSE_BASE){
+                noseBase = a.getPosition();
+            }else if (a.getType() == Landmark.RIGHT_MOUTH){
+                rightMouth = a.getPosition();
+            }
+             //canvas.drawCircle((int) (translateX(point.x)), (int) (translateY(point.y)), FACE_POSITION_RADIUS, mFacePositionPaint);
+            if(a.getType() == Landmark.LEFT_EYE)
+                leftEye = a.getPosition();
+            else if(a.getType() == Landmark.RIGHT_EYE)
+                rightEye = a.getPosition();
+            try {
+                float scaleY;
+                matrix.setTranslate(translateX(leftMouth.x) - ((translateY(leftMouth.y)) - translateY(noseBase.y)) ,translateY(noseBase.y));
+
+                float scaleX = ((translateX(rightMouth.x) - translateX(leftMouth.x)))/180;
+                if(leftMouth.y >= rightMouth.y)
+                    scaleY= ((translateY(leftMouth.y)) - translateY(noseBase.y))/80;
+                else{
+                    scaleY= ((translateY(rightMouth.y)) - translateY(noseBase.y))/80;
+                }
+                matrix.preScale(scaleX, scaleY);
+                degree =  Math.toDegrees(-Math.atan2(leftMouth.y - rightMouth.y, leftMouth.x - rightMouth.x));
+                matrix.preRotate((float)degree);
+
+                canvas.drawBitmap(bitmap, matrix,null);
+            }catch (Exception e){
+                Log.e(TAG, "Exception caught: value null in facial coordinates");
             }
 
-            double viewWidth = canvas.getWidth();
-            double viewHeight = canvas.getHeight();
-            double imageWidth = 480;
-            double imageHeight = 640;
-            double scale = Math.min(viewWidth/imageWidth, viewHeight/imageHeight);
-
-            //canvas.drawCircle(Fpoints.x, Fpoints.y, FACE_POSITION_RADIUS, mFacePositionPaint);
-            //canvas.drawCircle(scaleX(point.x), scaleY(point.y), FACE_POSITION_RADIUS, mFacePositionPaint);
-
-
-            Log.d("FacePoint", Fpoints.toString());
-            canvas.drawCircle((int) (point.x*scale), (int) (point.y*scale), FACE_POSITION_RADIUS,mFacePositionPaint);
-
-            //canvas.drawCircle(  scaleX((float) (point.x * scale)) , scaleY((float) (point.y * scale)), FACE_POSITION_RADIUS, mFacePositionPaint);
-            //canvas.drawCircle(Fpoints.x + point.x , Fpoints.y + point.y, FACE_POSITION_RADIUS, mFacePositionPaint);
         }
-        //canvas.drawCircle(left, top, FACE_POSITION_RADIUS,mFacePositionPaint);
-        //canvas.drawCircle(xOffset, yOffset, FACE_POSITION_RADIUS, mFacePositionPaint);
-        Bitmap bitmap = BitmapFactory.decodeResource(overlay.getContext().getResources(), R.drawable.download);
-        canvas.drawBitmap(bitmap, left,top,new Paint());
-        canvas.drawRect(left, top, right, bottom, mBoxPaint);
-        Bitmap bmOverlay = Bitmap.createBitmap(canvas.getWidth()/2, canvas.getHeight()/2, Bitmap.Config.RGB_565);
-//        Bitmap bmOverlay = Bitmap.createBitmap(getDrawingCache());
-       canvas = new Canvas(bmOverlay);
-        //canvas.drawBitmap(bmOverlay, 0,0,new Paint());
 
-         if(save)
-         {
-             String root = Environment.getExternalStorageDirectory().toString();
-             File myDir = new File(root + "/dress");
-             myDir.mkdirs();
-
-             if (myDir.exists())
-                 Toast.makeText(overlay.getContext(), "Directory Exist", Toast.LENGTH_SHORT).show();
-
-             String fname = "save.png";
-             File file = new File (myDir, fname);
-             Log.e("File path", file.getAbsolutePath());
-
-//             ContextWrapper cw = new ContextWrapper(overlay.getContext());
-//             // path to /data/data/yourapp/app_data/imageDir
-//             File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-//             // Create imageDir
-//             File file=new File(directory,"profile.jpg");
-
-
-             if (file.exists ()) file.delete ();
-             try {
-                 FileOutputStream out = new FileOutputStream(file);
-                 bmOverlay.compress(Bitmap.CompressFormat.PNG, 100, out);
-                 Log.e("Writing bitmap", file.getAbsolutePath());
-                 Toast.makeText(overlay.getContext(), "file written", Toast.LENGTH_SHORT).show();
-                 out.flush();
-                 out.close();
-             } catch (Exception e) {
-                 e.printStackTrace();
-             }
-             save = false;
-         }
 
 
     }
