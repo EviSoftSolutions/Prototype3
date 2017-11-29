@@ -1,20 +1,26 @@
 apply plugin: 'com.android.application'
 
-android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+repositories {
+    mavenCentral()
+    maven { url 'https://maven.google.com' }
+}
 
-    configurations.all{
-            resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.2'
+android {
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'
+
+    configurations.all {
+        resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.2'
     }
 
     defaultConfig {
         applicationId "abdullahhafeez.me.prototype2"
         minSdkVersion 17
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -29,12 +35,27 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:design:25.3.1'
+    //    compile 'org.jcodec:jcodec:0.2.0'
+
+
+    compile 'com.android.support:appcompat-v7:26.+'
+    compile 'com.android.support:design:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.google.android.gms:play-services-vision:9.4.0+'
-//    compile 'org.jcodec:jcodec:0.2.0'
+    compile 'com.google.android.gms:play-services-vision:11.6.0'
     compile 'org.jcodec:jcodec-android:0.2.0'
+    compile 'com.android.support:support-v4:26.+'
+    compile 'com.android.support:support-vector-drawable:26.+'
+    compile 'com.github.bumptech.glide:glide:4.3.0'
+    compile 'com.googlecode.mp4parser:isoparser:1.1.21'
+
+    compile 'com.android.support:cardview-v7:26.+'
+
+    compile 'com.google.firebase:firebase-auth:11.6.0'
+
+
+
     testCompile 'junit:junit:4.12'
 
 }
+
+apply plugin: 'com.google.gms.google-services'

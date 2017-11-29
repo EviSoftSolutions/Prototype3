@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package abdullahhafeez.me.prototype2;
+package abdullahhafeez.me.prototype2.vision;
 
 import android.content.Context;
 import android.graphics.Canvas;

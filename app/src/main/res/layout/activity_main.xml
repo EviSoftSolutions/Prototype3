@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:baselineAligned="false">
+    android:id="@+id/drawer_layout"
+    android:background="#ffffff"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".activities.MainActivity">
 
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <RelativeLayout
+        <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/checklay">
@@ -18,17 +22,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <abdullahhafeez.me.prototype2.CameraSourcePreview
+            <abdullahhafeez.me.prototype2.vision.CameraSourcePreview
                 android:id="@+id/preview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <abdullahhafeez.me.prototype2.GraphicOverlay
+                <abdullahhafeez.me.prototype2.vision.GraphicOverlay
                     android:id="@+id/faceOverlay"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
-            </abdullahhafeez.me.prototype2.CameraSourcePreview>
+            </abdullahhafeez.me.prototype2.vision.CameraSourcePreview>
 
         </FrameLayout>
 
@@ -37,65 +41,77 @@
             android:layout_height="40dp"
             android:layout_alignParentTop="true">
 
-           <!-- <Button
-                android:id="@+id/flash_but"
+           <ImageView
+                android:id="@+id/dehaze_but"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:background="@drawable/flash_off_icon"
+                app:srcCompat="@drawable/dehaze_icon"
                 android:layout_alignParentLeft="true"
-                android:onClick="flashOnClick"
-                android:tag="flash_off"
-                android:layout_marginLeft="20dp"/> -->
+                android:onClick="dehazeOnClick"
+                android:layout_marginLeft="20dp"/>
 
-            <Button
+            <ImageView
                 android:id="@+id/logo_but"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
-                android:background="@drawable/logo"
+                app:srcCompat="@drawable/logo"
                 android:layout_centerHorizontal="true"
                 android:onClick="logoOnClick"/>
 
-          <!--  <Button
-                android:id="@+id/camera_switch_but"
+            <ImageView
+                android:id="@+id/video_gallery_but"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:background="@drawable/switch_camera_icon"
+                app:srcCompat="@drawable/gallery"
                 android:layout_alignParentRight="true"
-                android:onClick="cameraSwitchOnClick"
-                android:layout_marginRight="20dp"/> -->
+                android:onClick="galleryOnClick"
+                android:layout_marginRight="20dp"/>
 
 
         </RelativeLayout>
 
-
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_alignParentBottom="true">
+            android:layout_height="150dp"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentBottom="true"
+            >
 
-            <Button
+            <ImageView
                 android:id="@+id/video_chat_but"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:background="@drawable/video_chat_icon"
+                app:srcCompat="@drawable/video_chat_icon"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentBottom="true"
                 android:onClick="videoChatOnClick"
                 android:layout_marginLeft="20dp"/>
 
-            <Button
+
+
+            <ImageView
                 android:id="@+id/camera_capture_but"
-                android:layout_width="70dp"
-                android:layout_height="match_parent"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_centerHorizontal="true"
-                android:background="@drawable/camera_icon"
+                android:layout_alignParentBottom="true"
+                app:srcCompat="@drawable/camera_icon"
                 android:onClick="cameraCaptureOnClick"/>
 
-            <Button
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/mainOverlayRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_above="@id/camera_capture_but"
+                android:layout_marginTop="10dp"
+                />
+
+            <ImageView
                 android:id="@+id/store_but"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:background="@drawable/store_icon"
+                app:srcCompat="@drawable/store_icon"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
                 android:onClick="storeOnClick"
@@ -105,4 +121,19 @@
         </RelativeLayout>
 
     </RelativeLayout>
-</LinearLayout>
+
+    </android.support.design.widget.CoordinatorLayout>
+
+
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header_main"
+        app:menu="@menu/activity_main_drawer" />
+
+
+</android.support.v4.widget.DrawerLayout>

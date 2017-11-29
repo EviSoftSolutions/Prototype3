@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package abdullahhafeez.me.prototype2;
+package abdullahhafeez.me.prototype2.vision;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -740,7 +740,7 @@ public class CameraSource {
     }
 
     /**
-     * Opens the camera and applies the user settings.
+     * Opens the camera and applies the user settings_icon.
      *
      * @throws RuntimeException if the method fails
      */
@@ -967,6 +967,7 @@ public class CameraSource {
         int[] selectedFpsRange = null;
         int minDiff = Integer.MAX_VALUE;
         List<int[]> previewFpsRangeList = camera.getParameters().getSupportedPreviewFpsRange();
+
         for (int[] range : previewFpsRangeList) {
             int deltaMin = desiredPreviewFpsScaled - range[Camera.Parameters.PREVIEW_FPS_MIN_INDEX];
             int deltaMax = desiredPreviewFpsScaled - range[Camera.Parameters.PREVIEW_FPS_MAX_INDEX];
@@ -976,13 +977,15 @@ public class CameraSource {
                 minDiff = diff;
             }
         }
+//        int minFps = (previewFpsRangeList.get(0))[Camera.Parameters.PREVIEW_FPS_MIN_INDEX];
+//        int maxFps = (previewFpsRangeList.get(0))[Camera.Parameters.PREVIEW_FPS_MAX_INDEX];
+Log.e("range",  Integer.toString(selectedFpsRange[0]));
         return selectedFpsRange;
     }
 
     /**
      * Calculates the correct rotation for the given camera id and sets the rotation in the
      * parameters.  It also sets the camera's display orientation and rotation.
-     *
      * @param parameters the camera parameters for which to set the rotation
      * @param cameraId   the camera id to set rotation based on
      */
@@ -1032,7 +1035,7 @@ public class CameraSource {
      * Creates one buffer for the camera preview callback.  The size of the buffer is based off of
      * the camera preview size and the format of the camera image.
      *
-     * @return a new preview buffer of the appropriate size for the current camera settings
+     * @return a new preview buffer of the appropriate size for the current camera settings_icon
      */
     private byte[] createPreviewBuffer(Size previewSize) {
         int bitsPerPixel = ImageFormat.getBitsPerPixel(ImageFormat.NV21);
@@ -1236,6 +1239,7 @@ public class CameraSource {
 
     public void setPreviewInterface(CameraSource.PreviewFrameInterface previewInterface)
     {
+        if(previewInterface != null)
         this.previewFrameInterface = previewInterface;
     }
 

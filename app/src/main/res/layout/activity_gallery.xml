@@ -3,18 +3,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="abdullahhafeez.me.prototype2.GalleryActivity">
+    tools:context="abdullahhafeez.me.prototype2.activities.GalleryActivity">
 
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/videoGridView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:columnWidth="90dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:numColumns="2"
         android:verticalSpacing="10dp"
         android:horizontalSpacing="10dp"
-        android:stretchMode="columnWidth"
-        android:gravity="center"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/no_video_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No Media Detected"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         />
 
 </RelativeLayout>
