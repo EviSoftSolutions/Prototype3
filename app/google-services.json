@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "61677576324",
+    "firebase_url": "https://verize-924fd.firebaseio.com",
+    "project_id": "verize-924fd",
+    "storage_bucket": "verize-924fd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:61677576324:android:13988813bf58638e",
+        "android_client_info": {
+          "package_name": "abdullahhafeez.me.prototype2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "61677576324-0p1que70pl4a89j2rcomoprmtdghlv0n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "abdullahhafeez.me.prototype2",
+            "certificate_hash": "ae90d433e7ca290ee365b7e997bbf6ff831faa67"
+          }
+        },
+        {
+          "client_id": "61677576324-4pq7ts6g3ef3hr4lipn51hq1hfds4lef.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqnNNwTjpVNcD0iGEJ8SO5_ZCtdWnh0iQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "61677576324-4pq7ts6g3ef3hr4lipn51hq1hfds4lef.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
