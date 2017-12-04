@@ -278,6 +278,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         overlayPreviewList.add(R.drawable.simple_mustache_sample);
         overlayPreviewList.add(R.drawable.blue_mustache_sample);
         overlayPreviewList.add(R.drawable.joker_sample);
+        overlayPreviewList.add(R.drawable.anonymous_sample);
 
         overlayPreviewList.add(R.drawable.curly_mustache_sample);
         overlayPreviewList.add(R.drawable.simple_mustache_sample);
@@ -292,6 +293,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         overlayList.add(R.drawable.simple_moustache);
         overlayList.add(R.drawable.blue_mustache);
         overlayList.add(R.drawable.joker_hat);
+        overlayList.add(R.drawable.anonymous);
 
         overlayList.add(R.drawable.curly_mustache);
         overlayList.add(R.drawable.simple_moustache);
@@ -372,7 +374,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .setAction("OK", null)
                     .setActionTextColor(Color.RED)
                     .show();
-            startService(buildServiceIntent);
+            //startService(buildServiceIntent);
 
         } else {
             makeVideoFlag = true;
@@ -621,53 +623,114 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Log.e(TAG, "Landmarks are null");
                 }
 
+                if(currentDrawableOverlay == R.drawable.blue_mustache ||
+                        currentDrawableOverlay == R.drawable.curly_mustache ||
+                        currentDrawableOverlay == R.drawable.simple_moustache ) {
 
-                for (Landmark a : allLands) {
+                    for (Landmark a : allLands) {
 
-                    if (a.getType() == Landmark.LEFT_MOUTH){
-                        leftMouth = a.getPosition();
+                        if (a.getType() == Landmark.LEFT_MOUTH) {
+                            leftMouth = a.getPosition();
+                        } else if (a.getType() == Landmark.NOSE_BASE) {
+                            noseBase = a.getPosition();
+                        } else if (a.getType() == Landmark.RIGHT_MOUTH) {
+                            rightMouth = a.getPosition();
+                        }
+
                     }
-                    else if (a.getType() ==Landmark.NOSE_BASE){
-                        noseBase = a.getPosition();
-                    }else if (a.getType() == Landmark.RIGHT_MOUTH){
-                        rightMouth = a.getPosition();
+
+                    try {
+
+                        editMatrix = new Matrix();
+
+                        float scaleY;
+                        float scaleX = (leftMouth.x - rightMouth.x) / 180;
+                        if (leftMouth.y < rightMouth.y) {
+                            scaleY = (rightMouth.y - noseBase.y) / 90;
+                            editMatrix.setTranslate(rightMouth.x - (rightMouth.y - noseBase.y) / 2, noseBase.y + (rightMouth.y - noseBase.y) / 2);
+                        } else {
+                            scaleY = (leftMouth.y - noseBase.y) / 90;
+                            editMatrix.setTranslate(rightMouth.x - (rightMouth.y - noseBase.y) / 2, noseBase.y + (rightMouth.y - noseBase.y) / 4);
+
+                        }
+                        editMatrix.preScale(scaleX, scaleY);
+                        degree = Math.toDegrees(-Math.atan2(leftMouth.y - rightMouth.y, leftMouth.x - rightMouth.x));
+                        editMatrix.preRotate((float) -degree);
+
+                        tempCanvas.drawBitmap(overlay, editMatrix, null);
+                    } catch (Exception e) {
+                        Log.e(TAG, "Exception caught: value null in facial coordinates");
                     }
-
-                    if(a.getType() == Landmark.LEFT_EYE)
-                        leftEye = a.getPosition();
-                    else if(a.getType() == Landmark.RIGHT_EYE)
-                        rightEye = a.getPosition();
-
-
-
-
-
                 }
+                else if(currentDrawableOverlay == R.drawable.joker_hat){
+                    for (Landmark a : allLands) {
 
-                try {
-
-                    editMatrix = new Matrix();
-
-                    float scaleY;
-                    float scaleX = (leftMouth.x - rightMouth.x)/180;
-                    if(leftMouth.y < rightMouth.y) {
-                        scaleY = (rightMouth.y - noseBase.y) / 90;
-                        editMatrix.setTranslate(rightMouth.x - (rightMouth.y - noseBase.y) / 2, noseBase.y + (rightMouth.y - noseBase.y) / 2);
-                    }
-                    else {
-                        scaleY= (leftMouth.y - noseBase.y)/90;
-                        editMatrix.setTranslate(rightMouth.x - (rightMouth.y - noseBase.y) / 2,noseBase.y + (rightMouth.y - noseBase.y) / 4);
+                        if (a.getType() == Landmark.LEFT_EYE) {
+                            leftEye = a.getPosition();
+                        } else if (a.getType() == Landmark.NOSE_BASE) {
+                            noseBase = a.getPosition();
+                        } else if (a.getType() == Landmark.RIGHT_EYE) {
+                            rightEye = a.getPosition();
+                        }
 
                     }
-                    editMatrix.preScale(scaleX, scaleY);
-                    degree =  Math.toDegrees(-Math.atan2(leftMouth.y - rightMouth.y, leftMouth.x - rightMouth.x));
-                    editMatrix.preRotate((float)-degree);
 
-                    tempCanvas.drawBitmap(overlay, editMatrix,null);
-                }catch (Exception e){
-                    Log.e(TAG, "Exception caught: value null in facial coordinates");
+                    PointF pointF = faces.valueAt(i).getPosition();
+                    float x = pointF.x + faces.valueAt(i).getWidth() / 2;
+                    float y = pointF.y + faces.valueAt(i).getHeight() / 2;
+
+                    // Draws a bounding box around the face.
+                    float xOffset = faces.valueAt(i).getWidth() / 2.5f;
+                    float yOffset = faces.valueAt(i).getHeight() / 2.5f;
+                    float left = x - xOffset;
+                    float top = y - yOffset;
+                    float right = x + xOffset;
+                    float bottom = y + yOffset;
+
+                    try {
+
+                        editMatrix = new Matrix();
+
+                        float scaleY = (right - left) / 500;
+                        float scaleX = (left - right) / 500;
+
+                        if (Math.abs(leftEye.y - rightEye.y) > 5) {
+                            if (leftEye.y < rightEye.y) {
+                                //scaleY = (rightMouth.y - noseBase.y) / 90;
+                                Log.e("LEFT","UPAR");
+                                editMatrix.setTranslate(left + (2*xOffset ), top - yOffset);
+
+
+                            } else {
+                                //scaleY = (leftMouth.y - noseBase.y) / 90;
+                                //editMatrix.setTranslate();
+
+                                Log.e("LEFT","neechay");
+                                editMatrix.setTranslate(left + (3*xOffset ), top - (yOffset/3) );
+
+                            }
+                        }
+                        else{
+                            editMatrix.setTranslate(left + (2*xOffset + xOffset/2 ), top - (yOffset - yOffset/3));
+                            Log.e("LEFT","Neutral");
+                        }
+
+                        editMatrix.preScale(scaleX, scaleY);
+                        degree = Math.toDegrees(Math.atan2(leftEye.y - rightEye.y, leftEye.x - rightEye.x));
+                        //degree =  Math.toDegrees(-Math.atan2(rightEye.y - leftEye.y, rightEye.x - leftEye.x));
+
+                        editMatrix.preRotate((float) -degree);
+
+                        tempCanvas.drawBitmap(overlay, editMatrix, null);
+
+                        Bitmap nose = BitmapFactory.decodeResource(getResources(), R.drawable.joker_nose);
+                        tempCanvas.drawBitmap(nose, noseBase.x - (nose.getWidth()/2), noseBase.y - (nose.getHeight()/2), null);
+
+
+                    } catch (Exception e) {
+                        Log.e(TAG, "Exception caught: value null in facial coordinates");
+                    }
                 }
-
 
 
 

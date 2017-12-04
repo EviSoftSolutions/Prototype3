@@ -207,21 +207,33 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
                 }
 
                 try {
-                    matrix.setTranslate(left - (xOffset/2),top - (yOffset) );
-                    float scaleX = (right - left)/450;
+                    matrix.setTranslate(left - (xOffset/2),top - (yOffset - yOffset/3) );
+                    float scaleX = (right - left)/470;
                     float scaleY = (right - left)/400;
-                    if(leftEye.y >= rightEye.y) {
-                        //scaleY= (top - (yOffset - yOffset/2) - top)/180;
-                        //scaleY = top - translateY(leftEye.y);
 
-                        //scaleY = (leftEye.y - rightEye.y)/10;
-                    }else{
-                       // scaleY= ((translateY(rightMouth.y)) - translateY(noseBase.y))/80;
-                        // scaleY= (top - (yOffset - yOffset/2) - top)/180;
-                        //scaleY = top - translateY(rightEye.y);
+                    if (Math.abs(leftEye.y - rightEye.y) > 10) {
 
-                        //scaleY = (rightEye.y - leftEye.y)/10;
+                        if (leftEye.y >= rightEye.y) {
+                            //scaleY= (top - (yOffset - yOffset/2) - top)/180;
+                            //scaleY = top - translateY(leftEye.y);
 
+                            //scaleY = (leftEye.y - rightEye.y)/10;
+
+                            matrix.setTranslate(left - (xOffset + xOffset/3), top - (yOffset - yOffset / 2));
+
+
+                        } else {
+                            // scaleY= ((translateY(rightMouth.y)) - translateY(noseBase.y))/80;
+                            // scaleY= (top - (yOffset - yOffset/2) - top)/180;
+                            //scaleY = top - translateY(rightEye.y);
+
+                            //scaleY = (rightEye.y - leftEye.y)/10;
+
+                            matrix.setTranslate(left , top - (yOffset + yOffset/3));
+
+
+
+                        }
                     }
 
                     Log.e("scaley", Double.toString(scaleY));
@@ -238,8 +250,8 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
 
                     if(MainActivity.overlay != null) {
                         canvas.drawBitmap(MainActivity.overlay, matrix,null);
-                        Bitmap bitmap = BitmapFactory.decodeResource(overlay.getContext().getResources(), R.drawable.joker_nose);
 
+                        Bitmap bitmap = BitmapFactory.decodeResource(overlay.getContext().getResources(), R.drawable.joker_nose);
 
                         canvas.drawBitmap(bitmap, translateX(noseBase.x) - bitmap.getWidth()/2, translateY(noseBase.y) - bitmap.getHeight() / 2 , null);
                     }
@@ -248,6 +260,83 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
                 }
 
             }
+
+        }
+        else if(MainActivity.currentDrawableOverlay == R.drawable.anonymous){
+
+           // for(Landmark a : allLands) {
+//
+//                point = a.getPosition();
+//
+//                if (a.getType() == Landmark.LEFT_EYE){
+//                    leftEye = a.getPosition();
+//                }
+//                else if (a.getType() ==Landmark.NOSE_BASE){
+//                    noseBase = a.getPosition();
+//                }else if (a.getType() == Landmark.RIGHT_EYE){
+//                    rightEye = a.getPosition();
+//                }
+
+//                try
+//                 {
+//                   // matrix.setTranslate(left - (xOffset/2),top - (yOffset - yOffset/3) );
+//                    matrix.setTranslate(left ,top  );
+//                    float scaleX = (right - left)/470;
+//                    float scaleY = (right - left)/400;
+//
+//                    if (Math.abs(leftEye.y - rightEye.y) > 10) {
+//
+//                        if (leftEye.y >= rightEye.y) {
+//                            //scaleY= (top - (yOffset - yOffset/2) - top)/180;
+//                            //scaleY = top - translateY(leftEye.y);
+//
+//                            //scaleY = (leftEye.y - rightEye.y)/10;
+//
+//                            matrix.setTranslate(left - (xOffset + xOffset/3), top - (yOffset - yOffset / 2));
+//
+//
+//                        } else {
+//                            // scaleY= ((translateY(rightMouth.y)) - translateY(noseBase.y))/80;
+//                            // scaleY= (top - (yOffset - yOffset/2) - top)/180;
+//                            //scaleY = top - translateY(rightEye.y);
+//
+//                            //scaleY = (rightEye.y - leftEye.y)/10;
+//
+//                            matrix.setTranslate(left , top - (yOffset + yOffset/3));
+//
+//
+//
+//                        }
+//                    }
+//
+//                    Log.e("scaley", Double.toString(scaleY));
+//
+//
+//                    //In actual when right eye is above then left.y has greater value
+//
+//                    matrix.preScale(scaleX, scaleY);
+//                    degree =  Math.toDegrees(-Math.atan2(leftEye.y - rightEye.y, leftEye.x - rightEye.x));
+//
+//                    Log.e("degree", Double.toString(degree));
+//
+//                    matrix.preRotate((float)degree);
+//
+//                    if(MainActivity.overlay != null) {
+//                        canvas.drawBitmap(MainActivity.overlay, matrix,null);
+//
+//                        Bitmap bitmap = BitmapFactory.decodeResource(overlay.getContext().getResources(), R.drawable.joker_nose);
+//
+//                        canvas.drawBitmap(bitmap, translateX(noseBase.x) - bitmap.getWidth()/2, translateY(noseBase.y) - bitmap.getHeight() / 2 , null);
+//                    }
+//                }catch (Exception e)   {
+//                    Log.e(TAG, "Exception caught: value null in facial coordinates");
+//                }
+
+        //    }
+
+
+            canvas.drawBitmap(MainActivity.overlay, left, top, null);
+
 
         }
 
