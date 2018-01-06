@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="abdullahhafeez.me.prototype2.activities.VideoEditActivity">
+    tools:context="abdullahhafeez.me.prototype3.activities.VideoEditActivity">
 
 
     <ImageView
@@ -37,8 +37,10 @@
     <Button
         android:id="@+id/tickeditbutt"
         android:layout_width="0dp"
-        android:layout_height="35dp"
+        android:layout_height="50dp"
         android:text="Edit"
+        android:layout_margin="0dp"
+        android:padding="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -47,8 +49,10 @@
     <Button
         android:id="@+id/canceleditbutt"
         android:layout_width="0dp"
-        android:layout_height="35dp"
+        android:layout_height="50dp"
         android:text="Cancel"
+        android:layout_margin="0dp"
+        android:padding="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/tickeditbutt"
         app:layout_constraintRight_toRightOf="parent" />

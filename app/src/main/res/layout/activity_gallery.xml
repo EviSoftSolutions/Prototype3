@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="abdullahhafeez.me.prototype2.activities.GalleryActivity">
+    tools:context="abdullahhafeez.me.prototype3.activities.GalleryActivity">
 
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/videoGridView"

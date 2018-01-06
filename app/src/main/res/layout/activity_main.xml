@@ -22,17 +22,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <abdullahhafeez.me.prototype2.vision.CameraSourcePreview
+            <abdullahhafeez.me.prototype3.vision.CameraSourcePreview
                 android:id="@+id/preview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <abdullahhafeez.me.prototype2.vision.GraphicOverlay
+                <abdullahhafeez.me.prototype3.vision.GraphicOverlay
                     android:id="@+id/faceOverlay"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
-            </abdullahhafeez.me.prototype2.vision.CameraSourcePreview>
+            </abdullahhafeez.me.prototype3.vision.CameraSourcePreview>
 
         </FrameLayout>
 
@@ -50,13 +50,6 @@
                 android:onClick="dehazeOnClick"
                 android:layout_marginLeft="20dp"/>
 
-            <ImageView
-                android:id="@+id/logo_but"
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                app:srcCompat="@drawable/logo"
-                android:layout_centerHorizontal="true"
-                android:onClick="logoOnClick"/>
 
             <ImageView
                 android:id="@+id/video_gallery_but"

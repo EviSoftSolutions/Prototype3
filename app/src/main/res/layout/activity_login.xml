@@ -17,15 +17,15 @@
 
         <TextView
             android:id="@+id/smsLogo"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="100dp"
-            android:textSize="50sp"
-            android:gravity="center"
-            android:textStyle="bold|italic"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="30dp"
+            android:gravity="center"
+            android:text="VERIZE"
             android:textColor="#ffffff"
-            android:text="VERIZE" />
+            android:textSize="50sp"
+            android:textStyle="bold|italic" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -89,7 +89,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dip"
             android:background="@null"
-            android:text="Not a member? Get registered in Firebase now!"
+            android:text="Not a member? Get registered in Verize now!"
             android:textAllCaps="false"
             android:textColor="#ffffff"
             android:textSize="15dp" />

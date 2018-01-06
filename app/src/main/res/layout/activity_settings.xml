@@ -4,6 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="abdullahhafeez.me.prototype2.activities.SettingsActivity">
+    tools:context="abdullahhafeez.me.prototype3.activities.SettingsActivity">
 
 </android.support.constraint.ConstraintLayout>
